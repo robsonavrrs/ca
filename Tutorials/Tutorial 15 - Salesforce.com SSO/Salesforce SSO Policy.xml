@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exp:Export Version="3.0"
+    xmlns:L7p="http://www.layer7tech.com/ws/policy"
+    xmlns:exp="http://www.layer7tech.com/ws/policy/export" xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy">
+    <exp:References>
+        <IDProviderReference RefType="com.l7tech.console.policy.exporter.IdProviderReference">
+            <OID>-2</OID>
+            <Name>Internal Identity Provider</Name>
+            <Props>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGphdmEgdmVyc2lvbj0iMS43&#xd;
+LjBfMDMiIGNsYXNzPSJqYXZhLmJlYW5zLlhNTERlY29kZXIiPgogPG9iamVjdCBjbGFzcz0iamF2&#xd;
+YS51dGlsLkhhc2hNYXAiPgogIDx2b2lkIG1ldGhvZD0icHV0Ij4KICAgPHN0cmluZz5hZG1pbkVu&#xd;
+YWJsZWQ8L3N0cmluZz4KICAgPGJvb2xlYW4+dHJ1ZTwvYm9vbGVhbj4KICA8L3ZvaWQ+CiA8L29i&#xd;
+amVjdD4KPC9qYXZhPgo=</Props>
+            <TypeVal>1</TypeVal>
+        </IDProviderReference>
+        <PrivateKeyReference RefType="com.l7tech.console.policy.exporter.PrivateKeyReference">
+            <IsDefaultKey>false</IsDefaultKey>
+            <KeystoreOID>2</KeystoreOID>
+            <KeyAlias>ssl</KeyAlias>
+        </PrivateKeyReference>
+    </exp:References>
+    <wsp:Policy xmlns:L7p="http://www.layer7tech.com/ws/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy">
+        <wsp:All wsp:Usage="Required">
+            <L7p:HttpBasic/>
+            <L7p:Authentication>
+                <L7p:IdentityProviderOid longValue="-2"/>
+            </L7p:Authentication>
+            <wsp:All wsp:Usage="Required">
+                <L7p:CommentAssertion>
+                    <L7p:Comment stringValue="TO DO: Update the following URLs based on your Salesforce requirements"/>
+                </L7p:CommentAssertion>
+                <L7p:SetVariable>
+                    <L7p:Base64Expression stringValue="aHR0cHM6Ly9hcDEuc2FsZXNmb3JjZS5jb20="/>
+                    <L7p:VariableToSet stringValue="authnRequest.acsUrl"/>
+                </L7p:SetVariable>
+                <L7p:SetVariable>
+                    <L7p:Base64Expression stringValue="aHR0cHM6Ly9zYW1sLnNhbGVzZm9yY2UuY29t"/>
+                    <L7p:VariableToSet stringValue="authnRequest.issuer"/>
+                </L7p:SetVariable>
+                <L7p:CommentAssertion>
+                    <L7p:Comment stringValue="TO DO: Set the right private key for issuing SAML below"/>
+                </L7p:CommentAssertion>
+                <L7p:SamlIssuer>
+                    <L7p:AssertionComment assertionComment="included">
+                        <L7p:Properties mapValue="included">
+                            <L7p:entry>
+                                <L7p:key stringValue="LEFT.COMMENT"/>
+                                <L7p:value stringValue="SAML Token"/>
+                            </L7p:entry>
+                        </L7p:Properties>
+                    </L7p:AssertionComment>
+                    <L7p:AttributeStatement samlAttributeInfo="included">
+                        <L7p:Attributes samlAttributeElementInfoArray="included">
+                            <L7p:item samlAttributeElementInfo="included">
+                                <L7p:Name stringValue="ssostartpage"/>
+                                <L7p:Namespace stringValue=""/>
+                                <L7p:Value stringValue="http://l7apimgmt:8080/salesforce"/>
+                            </L7p:item>
+                        </L7p:Attributes>
+                    </L7p:AttributeStatement>
+                    <L7p:AudienceRestriction stringValue="${authnRequest.issuer}"/>
+                    <L7p:AuthenticationStatement samlAuthenticationInfo="included">
+                        <L7p:AuthenticationMethods stringArrayValue="included"/>
+                        <L7p:IncludeAuthenticationContextDeclaration booleanValue="false"/>
+                    </L7p:AuthenticationStatement>
+                    <L7p:ConditionsNotBeforeSecondsInPast intValue="300"/>
+                    <L7p:ConditionsNotOnOrAfterExpirySeconds intValue="300"/>
+                    <L7p:KeyAlias stringValue="ssl"/>
+                    <L7p:NameIdentifierFormat stringValue="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"/>
+                    <L7p:NameIdentifierType nameIdentifierType="SPECIFIED"/>
+                    <L7p:NameIdentifierValue stringValue="${request.username}"/>
+                    <L7p:NameQualifier stringValue=""/>
+                    <L7p:NonDefaultKeystoreId longValue="2"/>
+                    <L7p:SignAssertion booleanValue="false"/>
+
+                    <L7p:SubjectConfirmationDataNotOnOrAfterExpirySeconds intValue="300"/>
+                    <L7p:SubjectConfirmationDataRecipient stringValue="${authnRequest.acsUrl}"/>
+                    <L7p:SubjectConfirmationMethodUri stringValue="urn:oasis:names:tc:SAML:1.0:cm:bearer"/>
+                    <L7p:UsesDefaultKeyStore booleanValue="false"/>
+                    <L7p:Version boxedIntegerValue="2"/>
+                </L7p:SamlIssuer>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="LEFT.COMMENT"/>
+                            <L7p:value stringValue="Create SAML"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+            <L7p:SamlpResponseBuilder>
+                <L7p:AddIssuer booleanValue="true"/>
+                <L7p:InResponseTo stringValue="${authnRequest.Id}"/>
+                <L7p:KeyAlias stringValue="ssl"/>
+                <L7p:NonDefaultKeystoreId longValue="2"/>
+                <L7p:OtherTargetMessageVariable stringValue="signedResponse"/>
+                <L7p:ResponseAssertions stringValue="${issuedSamlAssertion}"/>
+                <L7p:SignResponse booleanValue="true"/>
+                <L7p:StatusDetail stringValue=""/>
+                <L7p:StatusMessage stringValue=""/>
+                <L7p:Target target="OTHER"/>
+                <L7p:UsesDefaultKeyStore booleanValue="false"/>
+            </L7p:SamlpResponseBuilder>
+            <L7p:EncodeDecode>
+                <L7p:SourceVariableName stringValue="signedResponse"/>
+                <L7p:TargetDataType variableDataType="string"/>
+                <L7p:TargetVariableName stringValue="samlResponseB64"/>
+                <L7p:TransformType transformType="BASE64_ENCODE"/>
+            </L7p:EncodeDecode>
+            <wsp:OneOrMore wsp:Usage="Required">
+                <wsp:All wsp:Usage="Required">
+                    <L7p:ComparisonAssertion>
+                        <L7p:CaseSensitive booleanValue="false"/>
+                        <L7p:Expression1 stringValue="${request.http.parameter.debug}"/>
+                        <L7p:Expression2 stringValue="true"/>
+                        <L7p:Predicates predicates="included">
+                            <L7p:item binary="included">
+                                <L7p:CaseSensitive booleanValue="false"/>
+                                <L7p:RightValue stringValue="true"/>
+                            </L7p:item>
+                        </L7p:Predicates>
+                    </L7p:ComparisonAssertion>
+                    <L7p:HardcodedResponse>
+                        <L7p:Base64ResponseBody stringValue="PEhUTUw+CiAgPEJPRFk+PCEtLSBPbmxvYWQ9ImRvY3VtZW50LmZvcm1zWzBdLnN1Ym1pdCgpIiAtLT4KICAgIDxGT1JNIE1FVEhPRD0iUE9TVCIgQUNUSU9OPSIke2F1dGhuUmVxdWVzdC5hY3NVcmx9Ij4KICAgICAgPElOUFVUIFRZUEU9IkhJRERFTiIgTkFNRT0iU0FNTFJlc3BvbnNlIiBWQUxVRT0iJHtzYW1sUmVzcG9uc2VCNjR9Ii8+CiAgICAgIDxJTlBVVCBUWVBFPSJISURERU4iIE5BTUU9IlJlbGF5U3RhdGUiIFZBTFVFPSIke2F1dGhuUmVxdWVzdC5hY3NVcmx9L2hvbWUvaG9tZS5qc3AiLz4KICAgICAgPElOUFVUIFRZUEU9IlNVQk1JVCIvPgogICAgPC9GT1JNPgoKPHA+CkJBU0U2NDogJHtzYW1sUmVzcG9uc2VCNjR9CjwvcD4KPHA+Cjx4bXA+CiR7c2lnbmVkUmVzcG9uc2UubWFpbnBhcnR9CjwveG1wPgo8L3A+CiAgPC9CT0RZPgo8L0hUTUw+Cg=="/>
+                        <L7p:ResponseContentType stringValue="text/html; charset=UTF-8"/>
+                    </L7p:HardcodedResponse>
+                </wsp:All>
+                <L7p:HardcodedResponse>
+                    <L7p:Base64ResponseBody stringValue="PEhUTUw+CiAgPEJPRFkgT25sb2FkPSJkb2N1bWVudC5mb3Jtc1swXS5zdWJtaXQoKSI+CiAgICA8Rk9STSBNRVRIT0Q9IlBPU1QiIEFDVElPTj0iJHthdXRoblJlcXVlc3QuYWNzVXJsfSI+CiAgICAgIDxJTlBVVCBUWVBFPSJISURERU4iIE5BTUU9IlNBTUxSZXNwb25zZSIgVkFMVUU9IiR7c2FtbFJlc3BvbnNlQjY0fSIvPgogICAgICA8SU5QVVQgVFlQRT0iSElEREVOIiBOQU1FPSJSZWxheVN0YXRlIiBWQUxVRT0iJHthdXRoblJlcXVlc3QuYWNzVXJsfS9ob21lL2hvbWUuanNwIi8+CiAgPC9CT0RZPgo8L0hUTUw+Cg=="/>
+                    <L7p:ResponseContentType stringValue="text/html; charset=UTF-8"/>
+                </L7p:HardcodedResponse>
+            </wsp:OneOrMore>
+        </wsp:All>
+    </wsp:Policy>
+</exp:Export>
